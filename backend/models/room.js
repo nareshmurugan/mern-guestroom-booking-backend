@@ -30,7 +30,8 @@ const roomschema =new Schema({
     availability:{
         type:Boolean,
         default:true
-    }
+    },
+    dateOfBooked:[]
 }, {
     timestamps: true
 })

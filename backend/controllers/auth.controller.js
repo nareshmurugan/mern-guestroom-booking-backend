@@ -6,28 +6,28 @@ import jwt from 'jsonwebtoken';
 // SignUp 
 export const UserSignUpController = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, userType } = req.body;
 
         // Check User Is Already Exits
         const user = await Users.findOne({ email });
-        console.log(user)
-        if (user) return res.status(400).json({ message: "The Email Already Exist" })
 
+        if (user) return res.status(400).json({ message: "The Email Already Exist" })
+ 
         // Creating a salt for Hashing the password
-        const salt = await genSalt();
+        const salt = await genSalt(10);
         // Hashing a Password with the Created Salt
         const hashedPassword = await hash(password, salt);
 
         // Creating a Customer 
-        const customer = await Users.create({ email, password: hashedPassword });
+        const customer = await Users.create({ email, password: hashedPassword, userType});
         // Saving the Customer to Db
         customer.save();
-
         // Sending Response to the Client
-        res.status(201).send({ message: "User Created", details: customer });
+        res.status(201).json({ message: "User Created", details: customer });
 
     } catch (error) {
         // Sending Unhandled Error As Response
+        console.log(error)
         res.status(400).json({ errorMessage: error.message })
     }
 }
@@ -38,7 +38,7 @@ export const UserSignInController = async (req, res, next) => {
 
         // Checking User Exists OR Not
         const customer = await Users.findOne({ email });
-        console.log(email, password)
+
         if (!customer) return res.status(400).json({ message: "User Not Exists" });
 
         // Checking Password Match

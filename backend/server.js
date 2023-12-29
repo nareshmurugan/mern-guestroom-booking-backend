@@ -6,7 +6,7 @@ import cors from 'cors';
 import multer from 'multer';
 import morgan from 'morgan';
 import  router  from "./routers/roomsrouter.js";
-
+import  Authrouter  from "./routers/authrouter.js";
 const app = express();
 
 // Overwriting a Default filename and dirname finder because of using module type exports and imports
@@ -45,6 +45,7 @@ export const upload = multer({ storage });
 
 
 app.use('/api/rooms',router);
+app.use('/api/user',Authrouter)
 
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>console.log(`Server Connected ${port}😃`));
