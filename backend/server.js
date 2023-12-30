@@ -46,6 +46,7 @@ export const upload = multer({ storage });
 
 app.use('/api/rooms',router);
 app.use('/api/user',Authrouter)
+console.log(new Date());
 
 const port = process.env.PORT || 5000;
 app.listen(port, ()=>console.log(`Server Connected ${port}😃`));

@@ -12,7 +12,7 @@ export const UserSignUpController = async (req, res) => {
         const user = await Users.findOne({ email });
 
         if (user) return res.status(400).json({ message: "The Email Already Exist" })
- 
+        
         // Creating a salt for Hashing the password
         const salt = await genSalt(10);
         // Hashing a Password with the Created Salt

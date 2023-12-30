@@ -31,7 +31,14 @@ const roomschema =new Schema({
         type:Boolean,
         default:true
     },
-    dateOfBooked:[]
+    dateOfBooked:[{
+        start:{
+            type: Date
+        },
+        end:{
+            type:Date
+        }
+    }]
 }, {
     timestamps: true
 })

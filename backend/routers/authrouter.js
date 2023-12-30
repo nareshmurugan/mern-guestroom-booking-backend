@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { verifyToken } from '../middlewares/authMiddleware.js';
 const Authrouter = Router();
-import { UserSignInController, UserSignUpController } from '../controllers/auth.controller.js';
+import { UserSignInController, UserSignUpController } from '../controllers/authController.js';
 
 // User SignUp 
 Authrouter.post('/signup', UserSignUpController);
