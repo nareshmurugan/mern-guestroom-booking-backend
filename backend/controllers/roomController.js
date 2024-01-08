@@ -1,7 +1,4 @@
-// import HouseOwnerModel from '../../models/HouseOwner.js';
-// import Room from '../../Room.js';
-// // import Booking from '../../models/Booking.js';
-// // import Customer from '../../models/Customer.js';
+import Users from "../models/Users.js";
 import room from "../models/room.js";
 
 export const GetRoomController = async (req, res, next) => {
@@ -12,30 +9,57 @@ export const GetRoomController = async (req, res, next) => {
     return res.status(400).json({ message: error });
   }
 };
-// // CreateRoom Controller
-// export const CreateRoomController = async (req, res, next) => {
-//     try {
-//         // Finding the HouseOwner with userId
-//         const houseOwner = await HouseOwnerModel.findById(req.user.id);
+export const GetRoom = async (req, res, next) => {
+  try {
+    const rooms = await room.findById(req.body._id);
+    res.send(rooms);
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+};
+export const GetBookings = async (req, res, next) => {
+  try {
+    const user = await Users.findById(req.user.id);
 
-//         if (!houseOwner) return res.status(400).json({ message: "User not Found in HouseOwner Registrey Please SignUp as HouseOwner to create a Rooms" });
+    const roomIds = user.roomsHistory.map((id) => id.roomId);
 
-//         // Creating Room
-//         const newRoom = await Room.create({ houseOwnerId: req.user.id, ...req.body });
-//         newRoom.save();
+    const rooms = await room.find({ _id: { $in: roomIds } });
+    const status = user.roomsHistory.map((item, index) => ({
+      ...rooms[index],
+      item,
+    }));
 
-//         // Adding room to the HouseOwner total rooms
-//         houseOwner.totalRooms.push(newRoom._id);
-//         houseOwner.save();
+    res.send(status);
+  } catch (error) {
+    return res.status(400).json({ message: error });
+  }
+};
 
-//         // Sending Result
-//         res.status(201).json({ result: 'Success', data: newRoom });
+//BookRoom
 
-//     } catch (error) {
-//         // Sending Unhandled Error As Response
-//         res.status(400).json({ errorMessage: error.message })
-//     }
-// }
+export const RoomBooking = async (req, res) => {
+  try {
+    const user = await Users.findById(req.user.id);
+    const rooms = await room.findById(req.body._id);
+
+    user.roomsHistory.push({
+      roomId: req.body._id,
+      roomStatus: "BOOKED",
+      roomBookedDate: new Date().now,
+    });
+    user.save();
+
+    rooms.dateOfBooked.push({
+      start: req.body.startDate,
+      end: req.body.startDate,
+    });
+    rooms.save();
+
+    res.status(200).json({ message: "Updated SuccessFully" });
+  } catch (error) {
+    res.status(400).json({ errorMessage: error.message });
+  }
+};
 
 // // UpdateRoom Contorller
 // export const UpdateRoomController = async (req, res, next) => {
@@ -58,6 +82,31 @@ export const GetRoomController = async (req, res, next) => {
 
 //         // Send the Response
 //         res.status(200).json({ message: "Updated SuccessFully", data: updatedRoom });
+//     } catch (error) {
+//         // Sending Unhandled Error As Response
+//         res.status(400).json({ errorMessage: error.message })
+//     }
+// }
+
+// // CreateRoom Controller
+// export const CreateRoomController = async (req, res, next) => {
+//     try {
+//         // Finding the HouseOwner with userId
+//         const houseOwner = await HouseOwnerModel.findById(req.user.id);
+
+//         if (!houseOwner) return res.status(400).json({ message: "User not Found in HouseOwner Registrey Please SignUp as HouseOwner to create a Rooms" });
+
+//         // Creating Room
+//         const newRoom = await Room.create({ houseOwnerId: req.user.id, ...req.body });
+//         newRoom.save();
+
+//         // Adding room to the HouseOwner total rooms
+//         houseOwner.totalRooms.push(newRoom._id);
+//         houseOwner.save();
+
+//         // Sending Result
+//         res.status(201).json({ result: 'Success', data: newRoom });
+
 //     } catch (error) {
 //         // Sending Unhandled Error As Response
 //         res.status(400).json({ errorMessage: error.message })

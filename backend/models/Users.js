@@ -19,7 +19,7 @@ const customerSchema = new Schema({
     },
     roomsHistory: [
        {
-            rooomId:{
+            roomId:{
                 type:String
             },
             roomStatus:{

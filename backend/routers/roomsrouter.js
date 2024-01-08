@@ -1,13 +1,18 @@
 import { Router } from 'express'
+import { verifyToken } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 // import {GetRoomController, CreateRoomController, UpdateRoomController, DeleteRoomController, BookRoomController, CancelRoomController } from '../controllers/roomController.js';
-// import { verifyToken } from '../middlewares/authMiddleware.js';
-import {GetRoomController} from '../controllers/roomController.js';
+import {GetRoomController,GetRoom, GetBookings, RoomBooking} from '../controllers/roomController.js';
 
-//GetRoom
+//GetRooms
 router.get('/getallrooms', GetRoomController);
-// CreateRoom
+//GetRoom
+router.post('/getRoom', GetRoom);
+//GetBookings
+router.post('/getbookings',verifyToken, GetBookings)
+// RoomBooking
+router.post('/getbookings',verifyToken, RoomBookings)
 // router.post('/create', verifyToken, CreateRoomController);
 // // UpdateRoom
 // router.put('/update/:id', verifyToken, UpdateRoomController);

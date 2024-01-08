@@ -7,7 +7,7 @@ export const verifyToken = async (req, res, next) => {
 
         // Getting Authorization Token
         let token = req.body.token;
-
+        console.log("cxz")
         // Checking Token is Present or Not 
         if (!token)
             return res.status(403).json({ message: "Status Denied" });
